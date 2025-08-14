@@ -31,25 +31,25 @@ O **Radar Collector** é um sistema automatizado de ingestão de dados que sincr
 ```mermaid
 graph TB
     subgraph "Sistema Radar Production"
-        RadarDB[(MySQL Radar<br/>db-mysql-radar-production)]
-        RadarTables[80+ Tabelas:<br/>• store (farmácias)<br/>• store_metrics (métricas)<br/>• product (catálogo)<br/>• contest (campanhas)<br/>• user_access (usuários)]
+        RadarDB[(MySQL Radar\ndb-mysql-radar-production)]
+        RadarTables[80+ Tabelas:\n• store farmácias\n• store_metrics métricas\n• product catálogo\n• contest campanhas\n• user_access usuários]
     end
     
     subgraph "Airbyte Platform"
         AirbyteServer[Airbyte Server v0.3.23]
-        SourceRadar[Source MySQL Radar<br/>bi-cognitivo-read user]
-        DestS3[Destination S3<br/>Parquet + SNAPPY]
-        Connection[Connection<br/>connection_mysql_s3_radar]
+        SourceRadar[Source MySQL Radar\nbi-cognitivo-read user]
+        DestS3[Destination S3\nParquet + SNAPPY]
+        Connection[Connection\nconnection_mysql_s3_radar]
     end
     
     subgraph "AWS S3 Data Lake"
-        S3Bronze[s3://farmarcas-production-bronze/<br/>origin=airbyte/database=bronze_radar/]
-        DataPartition[Partitioned Data<br/>cog_dt_ingestion=YYYY-MM-DD]
+        S3Bronze[s3://farmarcas-production-bronze/\norigin=airbyte/database=bronze_radar/]
+        DataPartition[Partitioned Data\ncog_dt_ingestion=YYYY-MM-DD]
         Compression[SNAPPY Compression]
     end
     
     subgraph "Airflow Orchestration"
-        RadarDAG[DAG: dag_sync_airbyte_connections<br/>Schedule: 0 2 * * *]
+        RadarDAG[DAG: dag_sync_airbyte_connections\nSchedule: 0 2 * * *]
         TriggerTask[AirbyteTriggerSyncOperator]
         SensorTask[AirbyteJobSensor]
         NotifyTask[Slack Notifications]
